@@ -1,3 +1,10 @@
+
+Nest-Graphite
+=============
+
+This is a very simple change to the original [Nest API](https://github.com/gboudreau/nest-api) gboudreau wrote. This one basically takes the interesting information from the API and submits it to a Graphite instance. 
+
+
 Nest Learning Thermostat API
 ============================
 
