@@ -24,14 +24,19 @@ echo "Current temperature:\n";
 printf("%.02f degrees %s\n", $infos->current_state->temperature, $infos->scale);
 echo "----------\n\n";
 
+$secs_since_last_connection = time() - strtotime($infos->network->last_connection);
+if ($secs_since_last_connection < 0) { $secs_since_last_connection = 0; }
+
 // Grab the interesting stuff together...
 //$s = $infos->serial_number;
 $s = strtolower(strtr($infos->where, " ", "_"));
 $data[] = sprintf("nest.%s.current.temperature_%s %.02f %u".PHP_EOL, $s, $infos->scale, $infos->current_state->temperature, time());
 $data[] = sprintf("nest.%s.current.battery_level %.03f %u".PHP_EOL, $s, $infos->current_state->battery_level, time());
 $data[] = sprintf("nest.%s.current.humidity %u %u".PHP_EOL, $s, $infos->current_state->humidity, time());
+$data[] = sprintf("nest.%s.current.seconds_since_last_connection %u %u".PHP_EOL, $s, $secs_since_last_connection, time());
 $data[] = sprintf("nest.%s.target.temperature %.02f %u".PHP_EOL, $s, $infos->target->temperature, time());
 $data[] = sprintf("nest.%s.target.time_to_target %u %u".PHP_EOL, $s, $infos->target->time_to_target ? $infos->target->time_to_target-time() : 0, time());
+$data[] = sprintf("nest.%s.current.heat %u %u".PHP_EOL, $s, $infos->current->heat ? 1 : 0, time());
 //var_dump($data);
 
 // Send it off to graphite
