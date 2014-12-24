@@ -18,7 +18,8 @@ $nest = new Nest($username, $password);
 $devices_serials = $nest->getDevices();
 
 $infos = $nest->getDeviceInfo($devices_serials[0]);
-//jlog($infos);
+if ($_ENV['NESTDEBUG'])
+	jlog($infos);
 
 echo "Current temperature:\n";
 printf("%.02f degrees %s\n", $infos->current_state->temperature, $infos->scale);
@@ -36,7 +37,8 @@ $data[] = sprintf("nest.%s.current.humidity %u %u".PHP_EOL, $s, $infos->current_
 $data[] = sprintf("nest.%s.current.seconds_since_last_connection %u %u".PHP_EOL, $s, $secs_since_last_connection, time());
 $data[] = sprintf("nest.%s.target.temperature %.02f %u".PHP_EOL, $s, $infos->target->temperature, time());
 $data[] = sprintf("nest.%s.target.time_to_target %u %u".PHP_EOL, $s, $infos->target->time_to_target ? $infos->target->time_to_target-time() : 0, time());
-$data[] = sprintf("nest.%s.current.heat %u %u".PHP_EOL, $s, $infos->current->heat ? 1 : 0, time());
+$data[] = sprintf("nest.%s.current.heat %u %u".PHP_EOL, $s, $infos->current_state->heat ? 1 : 0, time());
+
 //var_dump($data);
 
 // Send it off to graphite
